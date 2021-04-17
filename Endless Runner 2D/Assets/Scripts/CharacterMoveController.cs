@@ -10,6 +10,12 @@ public class CharacterMoveController : MonoBehaviour
     public float maxSpeed;
     Rigidbody2D rig;
 
+    [Header("Jump")]
+    public float jumpAccel;
+
+    private bool isJumping;
+    private bool isGround;
+
 
 
 
@@ -22,7 +28,13 @@ public class CharacterMoveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isGround)
+            {
+                isJumping = true;
+            }
+        }
     }
 
     private void FixedUpdate()

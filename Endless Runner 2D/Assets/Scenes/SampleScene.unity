@@ -396,6 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveAccel: 2
   maxSpeed: 4
+  jumpAccel: 5
 --- !u!1 &252852546
 GameObject:
   m_ObjectHideFlags: 0
