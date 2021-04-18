@@ -18,12 +18,16 @@ public class CharacterMoveController : MonoBehaviour
     private bool isJumping;
     private bool isOnGround;
 
+    private Animator anim;
+    private CharacterSoundController sound;
     private Rigidbody2D rb;
 
   
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        sound = GetComponent<CharacterSoundController>();
     }
 
     private void Update()
@@ -33,6 +37,7 @@ public class CharacterMoveController : MonoBehaviour
             if (isOnGround)
             {
                 isJumping = true;
+                sound.PlayJump();
             }
             
         }
@@ -50,6 +55,7 @@ public class CharacterMoveController : MonoBehaviour
         {
             isOnGround = false;
         }
+        anim.SetBool("isOnGround", isOnGround);
     }
 
     private void FixedUpdate()
@@ -66,5 +72,10 @@ public class CharacterMoveController : MonoBehaviour
         velocityVector.x = Mathf.Clamp(velocityVector.x + moveAccel * Time.deltaTime, 0.0f, maxSpeed);
 
         rb.velocity = velocityVector;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Debug.DrawLine(transform.position, transform.position + (Vector3.down * groundRaycastDistance), Color.white);
     }
 }
