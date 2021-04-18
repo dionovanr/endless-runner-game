@@ -20,6 +20,13 @@ public class CharacterMoveController : MonoBehaviour
     public float scoringRatio;
     private float lastPositionX;
 
+    [Header("Game Over")]
+    public GameObject gameOverScreen;
+    public float fallPositionY;
+
+    [Header("Camera")]
+    public CameraMoveController gameCamera;
+
     private bool isJumping;
     private bool isOnGround;
 
@@ -59,6 +66,12 @@ public class CharacterMoveController : MonoBehaviour
             score.IncreaseCurrentScore(scoreIncrement);
             lastPositionX += distancePassed;
         }
+
+        //gameover
+        if (transform.position.y < fallPositionY)
+        {
+            GameOver();
+        }
     }
 
     private void FixedUpdate()
@@ -88,6 +101,14 @@ public class CharacterMoveController : MonoBehaviour
 
         velocityVector.x = Mathf.Clamp(velocityVector.x + moveAccel * Time.deltaTime, 0.0f, maxSpeed);
         rb.velocity = velocityVector;
+    }
+
+    private void GameOver()
+    {
+        score.FinishScoring();
+        gameCamera.enabled = false;
+        gameOverScreen.SetActive(true);
+        this.enabled = false;
     }
 
     private void OnDrawGizmos()
