@@ -15,6 +15,11 @@ public class CharacterMoveController : MonoBehaviour
     public float groundRaycastDistance;
     public LayerMask groundLayerMask;
 
+    [Header("Scoring")]
+    public ScoreController score;
+    public float scoringRatio;
+    private float lastPositionX;
+
     private bool isJumping;
     private bool isOnGround;
 
@@ -32,6 +37,7 @@ public class CharacterMoveController : MonoBehaviour
 
     private void Update()
     {
+        //input
         if (Input.GetMouseButtonDown(0))
         {
             if (isOnGround)
@@ -41,7 +47,22 @@ public class CharacterMoveController : MonoBehaviour
             }
             
         }
+        //animasi
+        anim.SetBool("isOnGround", isOnGround);
 
+        //score
+        int distancePassed = Mathf.FloorToInt(transform.position.x - lastPositionX);
+        int scoreIncrement = Mathf.FloorToInt(distancePassed / scoringRatio);
+
+        if (scoreIncrement > 0)
+        {
+            score.IncreaseCurrentScore(scoreIncrement);
+            lastPositionX += distancePassed;
+        }
+    }
+
+    private void FixedUpdate()
+    {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundRaycastDistance, groundLayerMask);
 
         if (hit)
@@ -55,11 +76,7 @@ public class CharacterMoveController : MonoBehaviour
         {
             isOnGround = false;
         }
-        anim.SetBool("isOnGround", isOnGround);
-    }
 
-    private void FixedUpdate()
-    {
         Vector2 velocityVector = rb.velocity;
         if (isJumping)
         {
@@ -70,7 +87,6 @@ public class CharacterMoveController : MonoBehaviour
 
 
         velocityVector.x = Mathf.Clamp(velocityVector.x + moveAccel * Time.deltaTime, 0.0f, maxSpeed);
-
         rb.velocity = velocityVector;
     }
 

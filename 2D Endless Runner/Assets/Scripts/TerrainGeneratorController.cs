@@ -8,27 +8,23 @@ public class TerrainGeneratorController : MonoBehaviour
     public List<TerrainTemplateController> terrainTemplates;
     public float terrainTemplateWidth;
 
-    [Header("Force Early Template")]
-    public List<TerrainTemplateController> earlyTerrainTemplates;
-
     [Header("Generator Area")]
     public Camera gameCamera;
     public float areaStartOffset;
     public float areaEndOffset;
 
-    private List<GameObject> spawnedTerrain;
+    [Header("Force Early Template")]
+    public List<TerrainTemplateController> earlyTerrainTemplates;
 
+    private List<GameObject> spawnedTerrain;
     private float lastGeneratedPositionX;
     private float lastRemovedPositionX;
-
     private const float debugLineHeight = 10.0f;
-
-    // pool list
     private Dictionary<string, List<GameObject>> pool;
 
     private void Start()
     {
-        // init pool
+     
         pool = new Dictionary<string, List<GameObject>>();
 
         spawnedTerrain = new List<GameObject>();
@@ -88,7 +84,6 @@ public class TerrainGeneratorController : MonoBehaviour
         }
 
         newTerrain.transform.position = new Vector2(posX, 0f);
-
         spawnedTerrain.Add(newTerrain);
     }
 
@@ -96,7 +91,6 @@ public class TerrainGeneratorController : MonoBehaviour
     {
         GameObject terrainToRemove = null;
 
-        // find terrain at posX
         foreach (GameObject item in spawnedTerrain)
         {
             if (item.transform.position.x == posX)
@@ -105,8 +99,6 @@ public class TerrainGeneratorController : MonoBehaviour
                 break;
             }
         }
-
-        // after found;
         if (terrainToRemove != null)
         {
             spawnedTerrain.Remove(terrainToRemove);
@@ -114,12 +106,10 @@ public class TerrainGeneratorController : MonoBehaviour
         }
     }
 
-    // pool function
     private GameObject GenerateFromPool(GameObject item, Transform parent)
     {
         if (pool.ContainsKey(item.name))
         {
-            // if item available in pool
             if (pool[item.name].Count > 0)
             {
                 GameObject newItemFromPool = pool[item.name][0];
@@ -130,11 +120,9 @@ public class TerrainGeneratorController : MonoBehaviour
         }
         else
         {
-            // if item list not defined, create new one
             pool.Add(item.name, new List<GameObject>());
         }
 
-        // create new one if no item available in pool
         GameObject newItem = Instantiate(item, parent);
         newItem.name = item.name;
         return newItem;
@@ -151,7 +139,6 @@ public class TerrainGeneratorController : MonoBehaviour
         item.SetActive(false);
     }
 
-    // debug
     private void OnDrawGizmos()
     {
         Vector3 areaStartPosition = transform.position;
